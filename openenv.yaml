@@ -1,0 +1,64 @@
+spec_version: 1
+name: support_ticket_router
+type: space
+runtime: fastapi
+app: server.app:app
+port: 8000
+
+metadata:
+  title: "Customer Support Ticket Router"
+  description: >
+    Simulates a customer support inbox. An AI agent reads support tickets and
+    must classify priority, route to the correct department, compose a helpful
+    response, and extract action items. Three tasks of increasing difficulty
+    with deterministic graders producing scores from 0.0 to 1.0.
+  version: "1.0.0"
+  author: "OpenEnv Hackathon Team"
+  tags:
+    - customer-support
+    - classification
+    - routing
+    - nlp
+    - multi-task
+
+tasks:
+  - id: 1
+    name: "Priority Classification"
+    difficulty: easy
+    description: >
+      Classify each support ticket as Low, Medium, or High priority.
+      Grading: exact match = 1.0, adjacent (off by one) = 0.5, wrong = 0.0.
+    graded_fields:
+      - priority
+
+  - id: 2
+    name: "Department Routing"
+    difficulty: medium
+    description: >
+      Classify priority AND route each ticket to the correct department
+      (Tech / Billing / General / Escalation).
+      Grading: 50% priority score + 50% department score.
+    graded_fields:
+      - priority
+      - department
+
+  - id: 3
+    name: "Full Response"
+    difficulty: hard
+    description: >
+      Classify priority, route department, write a helpful first response to
+      the customer, and extract action items for the support team.
+      Grading: 25% priority + 25% department + 30% response quality + 20% action items.
+    graded_fields:
+      - priority
+      - department
+      - response
+      - action_items
+
+endpoints:
+  reset: POST /reset
+  step: POST /step
+  state: GET /state
+  tasks: GET /tasks
+  grader: POST /grader
+  baseline: POST /baseline
