@@ -11,6 +11,77 @@ Built for the **Meta PyTorch Hackathon**.
 
 ---
 
+## Try It Yourself (No AI API Key Needed)
+
+The easiest way to explore this project is to **be the AI yourself**. You'll read support tickets and make triage decisions — the system scores you instantly. No setup, no API keys, no terminal.
+
+### Step 1 — Install Python
+
+If you don't have Python installed:
+
+1. Go to [python.org/downloads](https://www.python.org/downloads/)
+2. Download the latest version (3.10 or higher)
+3. Run the installer — **check the box "Add Python to PATH"**
+4. Click Install
+
+### Step 2 — Open the Project
+
+Download or clone this repository, then open the folder on your computer.
+
+### Step 3 — Start the Server
+
+**Windows:** Double-click `run_server.bat`
+
+**Mac/Linux:** Double-click `run_server.command` (or run `chmod +x run_server.command` first, then double-click)
+
+A terminal window will open, install the required packages automatically, and launch your browser to `http://localhost:8000`. You'll see the API info page — the server is running.
+
+### Step 4 — Try the Manual Test
+
+Open a new terminal (Command Prompt on Windows, Terminal on Mac/Linux), navigate to the project folder, and run:
+
+```bash
+python test_manual.py
+```
+
+You'll see a support ticket and be asked to classify it. Type your answers and get scored instantly. No AI account or API key required.
+
+### What You'll See
+
+```
+============================================================
+  MANUAL TEST - Customer Support Ticket Router
+============================================================
+
+Fetching tasks...
+  Task 1: Priority Classification
+  Task 2: Department Routing
+  Task 3: Full Response
+
+Resetting environment...
+Received 2 ticket(s)
+
+------------------------------------------------------------
+TICKET: TKT-003
+Customer: Carol Davis
+Subject: How do I reset my password?
+Body: I forgot my password and can't log in...
+
+Your decision:
+  Priority (low/Medium/High): high
+  Department (Tech/Billing/General/Escalation): General
+  Response to customer: Sorry about that, I've sent a reset link.
+  Action items (comma-separated): Check email, send reset link
+
+  Score: 0.650
+    Priority: 0.5
+    Department: 1.0
+    Response: 0.38
+    Action Items: 0.67
+```
+
+---
+
 ## How It Works
 
 ```
@@ -81,60 +152,45 @@ Body: I forgot my password and can't log in. The 'Forgot Password' link
 
 ---
 
-## Quick Start
+## Developer Quick Start
 
-### 1. Install dependencies
+Comfortable with the terminal? Here's the fast path:
 
 ```bash
+# Install dependencies
 pip install -r server/requirements.txt
-```
 
-### 2. Set up environment variables
-
-Copy the example file and add your API keys:
-
-```bash
-cp .env.example .env
-```
-
-Edit `.env` with your keys — `GEMINI_API_KEY` for the Gemini baseline client, `OPENAI_API_KEY` for the server-side `/baseline` endpoint.
-
-### 3. Start the server
-
-```bash
+# Start the server
 python -m server.app --port 8000
+
+# Or use the one-click launcher (auto-opens browser)
+python run_server.py
 ```
 
-Visit [http://localhost:8000](http://localhost:8000) to verify it's running. You'll see the API info and available routes.
+Visit [http://localhost:8000](http://localhost:8000) to verify it's running.
 
----
+### Running the Baseline Agent
 
-## Running the Baseline Agent
-
-The included `client.py` runs an LLM (OpenAI or Gemini) against the environment and reports scores:
+Test how well an AI agent performs. You'll need an API key from [OpenAI](https://platform.openai.com) or [Google AI](https://aistudio.google.com).
 
 ```bash
-# With Gemini (default)
+# Set up your API key
+cp .env.example .env
+# Edit .env and add your key
+
+# Run with Gemini (default)
 python client.py --provider gemini --model gemini-2.0-flash --episodes 5
 
-# With OpenAI
+# Run with OpenAI
 python client.py --provider openai --model gpt-4o-mini --episodes 5
 ```
 
-Or run the server-side baseline via the API:
+Or test the server-side baseline endpoint:
 
 ```bash
 curl -X POST http://localhost:8000/baseline \
   -H "Content-Type: application/json" \
   -d '{"task_id": 3, "model": "gpt-4o-mini", "num_episodes": 3}'
-```
-
-### Manual Testing
-
-No API key needed — process tickets yourself in the terminal:
-
-```bash
-python test_manual.py
 ```
 
 ---
@@ -181,6 +237,9 @@ python test_manual.py
 
 ```
 .
+├── run_server.py                            # One-click launcher (auto-opens browser)
+├── run_server.bat                           # Windows double-click launcher
+├── run_server.command                       # Mac/Linux double-click launcher
 ├── models.py                                # Pydantic Action / Observation models
 ├── client.py                                # Baseline inference client (OpenAI + Gemini)
 ├── test_manual.py                           # Terminal-based manual testing
@@ -193,6 +252,19 @@ python test_manual.py
     ├── support_ticket_router_environment.py # Core environment, 15 tickets, grader logic
     └── requirements.txt
 ```
+
+---
+
+## Troubleshooting
+
+| Problem | Solution |
+|---------|----------|
+| **"python is not recognized"** | Python isn't on your PATH. Reinstall Python and check "Add Python to PATH" |
+| **"ModuleNotFoundError: No module named 'fastapi'"** | Run `pip install -r server/requirements.txt` |
+| **"Port 8000 is already in use"** | The launcher will try 8001, 8002, etc. automatically. Or close whatever else is using port 8000 |
+| **"Connection refused" in browser** | Make sure the server is still running — check the terminal window for errors |
+| **Browser opens but shows blank page** | This is an API, not a website. Go to [http://localhost:8000/tasks](http://localhost:8000/tasks) to see data |
+| **Manual test crashes** | Make sure the server is running first (`python run_server.py`), then run `python test_manual.py` in a separate terminal |
 
 ---
 
