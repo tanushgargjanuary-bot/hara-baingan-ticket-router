@@ -1,11 +1,8 @@
 # Customer Support Ticket Router
 
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-005571?logo=fastapi)](https://fastapi.tiangolo.com/)
-[![OpenEnv](https://img.shields.io/badge/OpenEnv-0.2.0-7B68EE)](https://github.com/openenv)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+**Python 3.10+** | **FastAPI** | **OpenEnv** | **License: MIT**
 
-An [OpenEnv](https://github.com/openenv) environment that simulates a customer support inbox. An AI agent reads realistic support tickets and must triage them — classifying priority, routing to the correct department, drafting a helpful response, and extracting action items. A deterministic grader scores every action from **0.0 to 1.0**.
+An OpenEnv environment that simulates a customer support inbox. An AI agent reads realistic support tickets and must triage them — classifying priority, routing to the correct department, drafting a helpful response, and extracting action items. A deterministic grader scores every action from **0.0 to 1.0**.
 
 Built for the **Meta PyTorch Hackathon**.
 
@@ -13,38 +10,106 @@ Built for the **Meta PyTorch Hackathon**.
 
 ## Try It Yourself (No AI API Key Needed)
 
-The easiest way to explore this project is to **be the AI yourself**. You'll read support tickets and make triage decisions — the system scores you instantly. No setup, no API keys, no terminal.
+The easiest way to explore this project is to **be the AI yourself**. You'll read support tickets and make triage decisions — the system scores you instantly. No setup, no API keys, no terminal experience required.
+
+---
 
 ### Step 1 — Install Python
 
-If you don't have Python installed:
+If you don't already have Python installed:
 
 1. Go to [python.org/downloads](https://www.python.org/downloads/)
-2. Download the latest version (3.10 or higher)
-3. Run the installer — **check the box "Add Python to PATH"**
-4. Click Install
+2. Download the latest version (**3.10 or higher**)
+3. Run the installer
+4. ⚠️ **Important:** Check the box that says **"Add Python to PATH"** — this is required
+5. Click **Install**
 
-### Step 2 — Open the Project
+To verify it worked, open a terminal (see Step 3) and type:
 
-Download or clone this repository, then open the folder on your computer.
+```
+python --version
+```
+
+You should see something like `Python 3.12.x`. If you see an error, revisit the installer and make sure "Add Python to PATH" was checked.
+
+---
+
+### Step 2 — Download the Project
+
+1. Go to the [GitHub repository page](https://github.com/tanushgargjanuary-bot/hara-baingan-ticket-router)
+2. Click the green **"⬇ Code"** button near the top-right
+3. Click **"Download ZIP"**
+4. Find the downloaded `.zip` file (usually in your **Downloads** folder)
+5. **Unzip it:**
+   - **Windows:** Right-click the `.zip` file → **Extract All** → Choose a location → Click **Extract**
+   - **Mac:** Double-click the `.zip` file — it will unzip automatically
+   - **Linux:** Right-click → **Extract Here**
+
+You should now have a folder called `hara-baingan-ticket-router-main`.
+
+---
 
 ### Step 3 — Start the Server
 
-**Windows:** Double-click `run_server.bat`
+Choose your operating system:
 
-**Mac/Linux:** Double-click `run_server.command` (or run `chmod +x run_server.command` first, then double-click)
+#### Windows
+Open the unzipped folder and **double-click `run_server.bat`**.
 
-A terminal window will open, install the required packages automatically, and launch your browser to `http://localhost:8000`. You'll see the API info page — the server is running.
+#### Mac
+Open the unzipped folder and **double-click `run_server.command`**.
+
+> **If Mac says the file "can't be opened":**
+> 1. Right-click `run_server.command`
+> 2. Click **Open With → Terminal**
+> 3. If prompted, click **Open** to confirm
+
+#### Linux
+1. Open a terminal
+2. Navigate to the project folder:
+   ```
+   cd ~/Downloads/hara-baingan-ticket-router-main
+   ```
+3. Run:
+   ```
+   chmod +x run_server.command
+   ./run_server.command
+   ```
+
+---
+
+A terminal window will open, install the required packages automatically, and launch your browser to **http://localhost:8000**. You'll see the API info page — this means the server is running. (It will look like raw data, not a pretty website — that's normal!)
+
+---
 
 ### Step 4 — Try the Manual Test
 
-Open a new terminal (Command Prompt on Windows, Terminal on Mac/Linux), navigate to the project folder, and run:
+**Leave the server running** (don't close that terminal window), and open a **second terminal:**
 
-```bash
+- **Windows:** Press `Win + R`, type `cmd`, hit Enter
+- **Mac:** Press `Cmd + Space`, type `Terminal`, hit Enter
+- **Linux:** Press `Ctrl + Alt + T`
+
+Now navigate to the project folder. For example, if you unzipped it into your Downloads folder:
+
+```
+cd ~/Downloads/hara-baingan-ticket-router-main
+```
+
+> 💡 **Windows users:** The command might look like this instead:
+> ```
+> cd C:\Users\YourName\Downloads\hara-baingan-ticket-router-main
+> ```
+
+Then run:
+
+```
 python test_manual.py
 ```
 
-You'll see a support ticket and be asked to classify it. Type your answers and get scored instantly. No AI account or API key required.
+You'll see a support ticket and be asked to classify it. Type your answers and get scored instantly. **No AI account or API key required.**
+
+---
 
 ### What You'll See
 
@@ -87,7 +152,7 @@ Your decision:
 ```
 ┌─────────────┐     ┌──────────────┐     ┌──────────────────┐     ┌──────────┐
 │  /reset     │────▶│ 1-3 tickets  │────▶│ Agent processes  │────▶│ /step ×N │
-│  (new ep)   │     │ returned     │     │ each ticket      │     │ (grade)  │
+│  (new round)│     │ returned     │     │ each ticket      │     │ (grade)  │
 └─────────────┘     └──────────────┘     └──────────────────┘     └──────────┘
                                                                         │
                                                                         ▼
@@ -97,10 +162,12 @@ Your decision:
                                                                └─────────────────┘
 ```
 
-1. **Reset** — the environment returns 1-3 random tickets from a pool of 15
-2. **Triage** — the agent reads each ticket and submits a structured action
-3. **Grade** — each action is scored deterministically against ground-truth labels
-4. **Done** — when all tickets are processed, the episode reward is the mean score
+1. **Reset** — the environment returns 1–3 random tickets from a pool of 15
+2. **Triage** — the agent (or you!) reads each ticket and submits a structured action
+3. **Grade** — each action is scored against the correct answers using consistent rules (same answers always produce the same score — no randomness)
+4. **Done** — when all tickets are processed, your final score is the average across all tickets
+
+---
 
 ## Tasks
 
@@ -108,26 +175,34 @@ Three difficulty tiers, each building on the last:
 
 | Task | Difficulty | What You Do | Graded Fields |
 |------|-----------|-------------|---------------|
-| **1** | Easy | Classify priority | `priority` |
-| **2** | Medium | Classify priority + route to department | `priority`, `department` |
-| **3** | Hard | Priority + department + response + action items | All four fields |
+| 1 | Easy | Classify priority | priority |
+| 2 | Medium | Classify priority + route to department | priority, department |
+| 3 | Hard | Priority + department + response + action items | All four fields |
 
-### Scoring
+---
+
+## Scoring
+
+You don't have to be perfect — the system gives **partial credit**:
 
 | Field | Exact Match | Partial Credit |
-|-------|------------|----------------|
-| **Priority** | 1.0 | 0.5 for adjacent (Low↔Medium, Medium↔High) |
-| **Department** | 1.0 | None — exact or zero |
-| **Response** | — | Keyword overlap: fraction of expected keywords found |
-| **Action Items** | — | Word overlap: ≥40% shared words counts as a match |
+|-------|-------------|----------------|
+| **Priority** | 1.0 | **0.5** if you're one level off (e.g., you said Medium but the answer was Low) |
+| **Department** | 1.0 | None — it's either right or wrong |
+| **Response** | — | Based on how many key phrases from the ideal response appear in yours |
+| **Action Items** | — | If 40% or more of the words match the expected item, it counts |
 
-**Penalties** prevent random guessing:
-- **−0.10** for High↔Low priority confusion
-- **−0.05** for cross-category routing errors (Tech↔Billing, General↔Escalation)
+**Penalties** (to discourage random guessing):
 
-### Example
+- **−0.10** for getting priority completely wrong (e.g., saying High when it should be Low)
+- **−0.05** for routing to the wrong category entirely (e.g., Tech when it should be Billing)
+
+---
+
+## Example
 
 **Ticket:**
+
 ```
 ID: TKT-003 | Customer: Carol Davis
 Subject: How do I reset my password?
@@ -136,6 +211,7 @@ Body: I forgot my password and can't log in. The 'Forgot Password' link
 ```
 
 **Expected action (Task 3):**
+
 ```json
 {
   "ticket_id": "TKT-003",
@@ -154,7 +230,7 @@ Body: I forgot my password and can't log in. The 'Forgot Password' link
 
 ## Developer Quick Start
 
-Comfortable with the terminal? Here's the fast path:
+> 🛠️ **This section is for developers comfortable with the terminal.** If you followed Steps 1–4 above, you can skip this.
 
 ```bash
 # Install dependencies
@@ -167,116 +243,15 @@ python -m server.app --port 8000
 python run_server.py
 ```
 
-Visit [http://localhost:8000](http://localhost:8000) to verify it's running.
+Visit **http://localhost:8000** to verify it's running.
+
+---
 
 ### Running the Baseline Agent
 
-Test how well an AI agent performs. You'll need an API key from [OpenAI](https://platform.openai.com) or [Google AI](https://aistudio.google.com).
+Test how well an AI agent performs. You'll need an API key from [OpenAI](https://platform.openai.com/) or [Google AI](https://aistudio.google.com/).
 
 ```bash
 # Set up your API key
 cp .env.example .env
-# Edit .env and add your key
-
-# Run with Gemini (default)
-python client.py --provider gemini --model gemini-2.0-flash --episodes 5
-
-# Run with OpenAI
-python client.py --provider openai --model gpt-4o-mini --episodes 5
-```
-
-Or test the server-side baseline endpoint:
-
-```bash
-curl -X POST http://localhost:8000/baseline \
-  -H "Content-Type: application/json" \
-  -d '{"task_id": 3, "model": "gpt-4o-mini", "num_episodes": 3}'
-```
-
----
-
-## API Reference
-
-### Endpoints
-
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET`  | `/` | API info and available routes |
-| `POST` | `/reset` | Start a new episode — returns 1-3 tickets |
-| `POST` | `/step` | Submit an action for one ticket — returns score |
-| `GET`  | `/state` | Current environment state |
-| `GET`  | `/tasks` | Metadata for all 3 tasks with action schemas |
-| `POST` | `/grader` | Get aggregated scores for the current episode |
-| `POST` | `/baseline` | Run OpenAI baseline inference server-side |
-
-### Observation (what the agent receives)
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `tickets` | `List[TicketData]` | 1-3 tickets with `ticket_id`, `customer_name`, `subject`, `body`, `timestamp` |
-| `task_id` | `int` | Active task (1 / 2 / 3) |
-| `task_description` | `str` | Human-readable task instructions |
-| `tickets_remaining` | `int` | Tickets still to be processed |
-| `last_score` | `TicketScore?` | Detailed grading breakdown of the previous step |
-| `done` | `bool` | `True` once all tickets are handled |
-| `reward` | `float` | Running mean task-weighted score (0.0 – 1.0) |
-
-### Action (what the agent submits)
-
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `ticket_id` | `str` | Always | Which ticket this action addresses |
-| `priority` | `str` | Always | `Low` / `Medium` / `High` |
-| `department` | `str` | Task ≥ 2 | `Tech` / `Billing` / `General` / `Escalation` |
-| `response` | `str` | Task 3 | Helpful first response to the customer |
-| `action_items` | `List[str]` | Task 3 | Action items for the support team |
-
----
-
-## Project Structure
-
-```
-.
-├── run_server.py                            # One-click launcher (auto-opens browser)
-├── run_server.bat                           # Windows double-click launcher
-├── run_server.command                       # Mac/Linux double-click launcher
-├── models.py                                # Pydantic Action / Observation models
-├── client.py                                # Baseline inference client (OpenAI + Gemini)
-├── test_manual.py                           # Terminal-based manual testing
-├── openenv.yaml                             # OpenEnv metadata & task definitions
-├── .env.example                             # Environment variable template
-├── README.md
-└── server/
-    ├── __init__.py                          # Makes server a Python package
-    ├── app.py                               # FastAPI app + custom endpoints
-    ├── support_ticket_router_environment.py # Core environment, 15 tickets, grader logic
-    └── requirements.txt
-```
-
----
-
-## Troubleshooting
-
-| Problem | Solution |
-|---------|----------|
-| **"python is not recognized"** | Python isn't on your PATH. Reinstall Python and check "Add Python to PATH" |
-| **"ModuleNotFoundError: No module named 'fastapi'"** | Run `pip install -r server/requirements.txt` |
-| **"Port 8000 is already in use"** | The launcher will try 8001, 8002, etc. automatically. Or close whatever else is using port 8000 |
-| **"Connection refused" in browser** | Make sure the server is still running — check the terminal window for errors |
-| **Browser opens but shows blank page** | This is an API, not a website. Go to [http://localhost:8000/tasks](http://localhost:8000/tasks) to see data |
-| **Manual test crashes** | Make sure the server is running first (`python run_server.py`), then run `python test_manual.py` in a separate terminal |
-
----
-
-## Design Decisions
-
-- **Partial credit everywhere** — adjacent priority guesses score 0.5, keyword overlap gives continuous signal for response quality, action-item matching accepts paraphrasing
-- **Deterministic grading** — no LLM-as-a-judge; all graders are pure functions of the action and ground-truth labels, making results perfectly reproducible
-- **Penalties, not just zeroes** — egregiously wrong actions (e.g. marking a hacked-account ticket as Low priority) receive a small negative adjustment to discourage random guessing
-- **15 diverse tickets** — covering Tech, Billing, General, and Escalation departments with realistic customer language and varying urgency
-
----
-
-## License
-
-MIT
+# Edit .env and 
